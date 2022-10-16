@@ -14,7 +14,15 @@
         android:theme="@style/Theme.PracticeProject"
         tools:targetApi="31">
         <activity
-            android:name=".SwipeLoadActivity"
+            android:name=".accessbility.AccessibilityActivity"
+            android:exported="false"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/Theme.PracticeProject.NoActionBar" />
+        <activity
+            android:name=".today.TransformFirstActivity"
+            android:exported="false" />
+        <activity
+            android:name=".today.TransformSecActivity"
             android:exported="false" />
         <activity
             android:name=".SecondActivity"
