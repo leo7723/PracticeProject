@@ -1,8 +1,11 @@
 package com.leo.practiceproject.today;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
+import android.app.Instrumentation;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +20,14 @@ import com.google.android.material.transition.platform.MaterialContainerTransfor
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.leo.practiceproject.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TransformSecActivity extends AppCompatActivity {
+
+    ArrayList<String> sharedElementNames;
+
+    String PENDING_EXIT_SHARED_ELEMENTS = "android:pendingExitSharedElements";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +35,14 @@ public class TransformSecActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         // Set up shared element transition
         findViewById(android.R.id.content).setTransitionName("shared_element_end_root");
-        setEnterSharedElementCallback(new MaterialContainerTransformSharedElementCallback());
+//        if (savedInstanceState!=null) {
+////            savedInstanceState.getStringArrayList(PENDING_EXIT_SHARED_ELEMENTS);
+//            savedInstanceState.putStringArrayList(PENDING_EXIT_SHARED_ELEMENTS, new ArrayList<>());
+//        }
+        setEnterSharedElementCallback(new MyCallBack());
         getWindow().setSharedElementEnterTransition(buildContainerTransform(true));
         getWindow().setSharedElementReturnTransition(buildContainerTransform(false));
+        getWindow().setSharedElementsUseOverlay(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_load);
@@ -57,13 +72,66 @@ public class TransformSecActivity extends AppCompatActivity {
         return transform;
     }
 
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if (outState.containsKey("InstrumentationFixBug") && outState.getBoolean("InstrumentationFixBug")) {
+//            return;
+//        }
+//    }
+
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && sharedElementNames != null) {
+                outState.putStringArrayList(PENDING_EXIT_SHARED_ELEMENTS, sharedElementNames);
+        }
+    }
+
+    @Override
+    public void finishAfterTransition() {
+        super.finishAfterTransition();
+//        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("InstrumentationFixBug", true);
+            new Instrumentation().callActivityOnSaveInstanceState(this, bundle);
+        }
+        super.onStop();
+    }
+
     private int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier(
                 "status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             result = getResources().getDimensionPixelSize(resourceId);
+
         }
         return result;
+    }
+
+    class MyCallBack extends MaterialContainerTransformSharedElementCallback {
+
+        @Override
+        public void onSharedElementsArrived(List<String> sharedElementNames, List<View> sharedElements, OnSharedElementsReadyListener listener) {
+            super.onSharedElementsArrived(sharedElementNames, sharedElements, listener);
+            TransformSecActivity.this.sharedElementNames = new ArrayList<>(sharedElementNames);
+        }
     }
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
 import com.leo.practiceproject.accessbility.AccessibilityActivity
+import com.leo.practiceproject.recyclerview.RecyclerviewActivity
 import com.leo.practiceproject.today.TransformFirstActivity
 import com.leo.practiceproject.today.TransformSecActivity
 import com.leo.practiceproject.touchlearn.TouchButton
@@ -29,6 +30,13 @@ class MainActivity : AppCompatActivity() {
             .setOnClickListener {
                 Log.i("leo7723", "touchButton-OnClickListener")
                 val intent = Intent(this, AccessibilityActivity::class.java)
+                startActivity(intent)
+            }
+
+        findViewById<TouchButton>(R.id.touch_button4)
+            .setOnClickListener {
+                Log.i("leo7723", "touchButton-OnClickListener")
+                val intent = Intent(this, RecyclerviewActivity::class.java)
                 startActivity(intent)
             }
 

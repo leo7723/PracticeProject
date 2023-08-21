@@ -14,6 +14,12 @@
         android:theme="@style/Theme.PracticeProject"
         tools:targetApi="31">
         <activity
+            android:name=".recyclerview.RecyclerviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".stackpage.StackPageActivity"
+            android:exported="false" />
+        <activity
             android:name=".accessbility.AccessibilityActivity"
             android:exported="false"
             android:label="@string/title_activity_scrolling"

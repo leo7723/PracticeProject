@@ -41,6 +41,12 @@
             android:id="@+id/touch_button3"
             android:text="AccessibilityActivity"/>
 
+        <com.leo.practiceproject.touchlearn.TouchButton
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:id="@+id/touch_button4"
+            android:text="RecyclerviewActivity"/>
+
     </com.leo.practiceproject.touchlearn.TouchLinearLayout>
 
 </androidx.core.widget.NestedScrollView>
