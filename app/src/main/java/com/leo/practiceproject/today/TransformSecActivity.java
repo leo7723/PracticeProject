@@ -2,6 +2,7 @@ package com.leo.practiceproject.today;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.SharedElementCallback;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import android.app.Instrumentation;
@@ -19,6 +20,8 @@ import com.google.android.material.color.MaterialColors;
 import com.google.android.material.transition.platform.MaterialContainerTransform;
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback;
 import com.leo.practiceproject.R;
+import com.leo.practiceproject.transition.CustomSharedElementCallback;
+import com.leo.practiceproject.transition.CustomTransition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,26 +37,31 @@ public class TransformSecActivity extends AppCompatActivity {
 
         getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
         // Set up shared element transition
-        findViewById(android.R.id.content).setTransitionName("shared_element_end_root");
+//        findViewById(android.R.id.content).setTransitionName("shared_element_end_root");
 //        if (savedInstanceState!=null) {
 ////            savedInstanceState.getStringArrayList(PENDING_EXIT_SHARED_ELEMENTS);
 //            savedInstanceState.putStringArrayList(PENDING_EXIT_SHARED_ELEMENTS, new ArrayList<>());
 //        }
-        setEnterSharedElementCallback(new MyCallBack());
-        getWindow().setSharedElementEnterTransition(buildContainerTransform(true));
-        getWindow().setSharedElementReturnTransition(buildContainerTransform(false));
-        getWindow().setSharedElementsUseOverlay(false);
+//        MyCallBack callBack = new MyCallBack();
+        SharedElementCallback callBack = new CustomSharedElementCallback();
+        setEnterSharedElementCallback(callBack);
+//        getWindow().setSharedElementEnterTransition(buildContainerTransform(true));
+//        getWindow().setSharedElementReturnTransition(buildContainerTransform(false));
+        getWindow().setSharedElementEnterTransition(new CustomTransition());
+        getWindow().setSharedElementReturnTransition(new CustomTransition());
+//        getWindow().setSharedElementsUseOverlay(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_load);
-        ImageView imageView = findViewById(R.id.top_image);
-        imageView.setAccessibilityDelegate(new View.AccessibilityDelegate(){
-            @Override
-            public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
-                return super.onRequestSendAccessibilityEvent(host, child, event);
-            }
-        });
-        imageView.setPadding(0, getStatusBarHeight(), 0, 0);
+        findViewById(R.id.card).setTransitionName("shared_element_end_root");
+//        ImageView imageView = findViewById(R.id.top_image);
+//        imageView.setAccessibilityDelegate(new View.AccessibilityDelegate(){
+//            @Override
+//            public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child, AccessibilityEvent event) {
+//                return super.onRequestSendAccessibilityEvent(host, child, event);
+//            }
+//        });
+//        imageView.setPadding(0, getStatusBarHeight(), 0, 0);
 
     }
 
@@ -91,29 +99,29 @@ public class TransformSecActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && sharedElementNames != null) {
-                outState.putStringArrayList(PENDING_EXIT_SHARED_ELEMENTS, sharedElementNames);
-        }
-    }
-
-    @Override
-    public void finishAfterTransition() {
-        super.finishAfterTransition();
-//        finish();
-    }
-
-    @Override
-    protected void onStop() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("InstrumentationFixBug", true);
-            new Instrumentation().callActivityOnSaveInstanceState(this, bundle);
-        }
-        super.onStop();
-    }
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && sharedElementNames != null) {
+//                outState.putStringArrayList(PENDING_EXIT_SHARED_ELEMENTS, sharedElementNames);
+//        }
+//    }
+//
+//    @Override
+//    public void finishAfterTransition() {
+//        super.finishAfterTransition();
+////        finish();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isFinishing()) {
+//            Bundle bundle = new Bundle();
+//            bundle.putBoolean("InstrumentationFixBug", true);
+//            new Instrumentation().callActivityOnSaveInstanceState(this, bundle);
+//        }
+//        super.onStop();
+//    }
 
     private int getStatusBarHeight() {
         int result = 0;
